@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Region {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  users User[]
+}
+
+model Temporary {
+  id    Int    @id @default(autoincrement())
+  otp   String
+  email String @unique
+}
+
+model Color {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  products Product[]
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  products Product[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  fullname  String
+  email     String   @unique
+  password  String
+  phone     String   @unique
+  image     String?
+  type      UserType
+  regionID  Int
+  lastSeenAt DateTime?
+  region    Region   @relation(fields: [regionID], references: [id])
+  products  Product[]
+  likes     Like[]
+  viewings  Viewing[]
+  comments  Comment[]
+  orders    Order[]
+  sentMsgs  Message[] @relation("sentMessages")
+  receivedMsgs Message[] @relation("receivedMessages")
+  sessions  Session[]
+}
+
+enum UserType {
+  ADMIN
+  SUPERADMIN
+  USER
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String
+  userID      Int
+  price       Float
+  type        ProductType
+  available   Boolean
+  colorID     Int?
+  categoryID  Int?
+  status      ProductStatus
+  negotiable  Boolean
+  user        User      @relation(fields: [userID], references: [id])
+  color       Color?    @relation(fields: [colorID], references: [id])
+  category    Category? @relation(fields: [categoryID], references: [id])
+  likes       Like[]
+  viewings    Viewing[]
+  comments    Comment[]
+  orders      Order[]
+  messages    Message[]
+}
+
+enum ProductType {
+  ELECTRONIC
+  PHONE
+  ACCESUAR
+  CLOTHE
+}
+
+enum ProductStatus {
+  NEW
+  USED
+}
+
+model Like {
+  id        Int     @id @default(autoincrement())
+  userID    Int
+  productID Int
+  user      User    @relation(fields: [userID], references: [id])
+  product   Product @relation(fields: [productID], references: [id])
+}
+
+model Viewing {
+  id        Int     @id @default(autoincrement())
+  userID    Int
+  productID Int
+  viewedAt  DateTime @default(now())
+  user      User    @relation(fields: [userID], references: [id])
+  product   Product @relation(fields: [productID], references: [id])
+}
+
+model Comment {
+  id        Int     @id @default(autoincrement())
+  msg       String
+  star      Int
+  userID    Int
+  productID Int
+  user      User    @relation(fields: [userID], references: [id])
+  product   Product @relation(fields: [productID], references: [id])
+}
+
+model Order {
+  id             Int     @id @default(autoincrement())
+  userID         Int
+  productID      Int
+  countOfProduct Int
+  user           User    @relation(fields: [userID], references: [id])
+  product        Product @relation(fields: [productID], references: [id])
+}
+
+model Message {
+  id        Int     @id @default(autoincrement())
+  msg       String
+  fromID    Int
+  toID      Int
+  productID Int
+  from      User    @relation("sentMessages", fields: [fromID], references: [id])
+  to        User    @relation("receivedMessages", fields: [toID], references: [id])
+  product   Product @relation(fields: [productID], references: [id])
+}
+
+model Session {
+  id       Int    @id @default(autoincrement())
+  ip       String
+  userID   Int
+  location String
+  user     User   @relation(fields: [userID], references: [id])
+}
+
+model BaseData {
+  id          Int    @id @default(autoincrement())
+  currency    String
+  location    String
+  link        String
+  phoneNumber String
+}
