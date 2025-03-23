@@ -14,11 +14,10 @@ import { OrderModule } from './order/order.module';
 import { MessageModule } from './message/message.module';
 import { SessionModule } from './session/session.module';
 import { BaseDataModule } from './base-data/base-data.module';
-import { AuthGuardModule } from './auth-guard/auth-guard.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [RegionModule, TemporaryModule, ColorModule, CategoryModule, UserModule, ProductModule, LikeModule, ViewingModule, CommentModule, OrderModule, MessageModule, SessionModule, BaseDataModule, AuthGuardModule, PrismaModule],
+  imports: [RegionModule, TemporaryModule, ColorModule, CategoryModule, UserModule, ProductModule, LikeModule, ViewingModule, CommentModule, OrderModule, MessageModule, SessionModule, BaseDataModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })

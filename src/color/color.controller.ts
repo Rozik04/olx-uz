@@ -8,8 +8,8 @@ export class ColorController {
   constructor(private readonly colorService: ColorService) {}
 
   @Post()
-  create(@Body() createColorDto: CreateColorDto) {
-    return this.colorService.create(createColorDto);
+  create(@Body() data: CreateColorDto) {
+    return this.colorService.create(data);
   }
 
   @Get()
@@ -19,16 +19,16 @@ export class ColorController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.colorService.findOne(+id);
+    return this.colorService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateColorDto: UpdateColorDto) {
-    return this.colorService.update(+id, updateColorDto);
+  update(@Param('id') id: string, @Body() data: UpdateColorDto) {
+    return this.colorService.update(id, data);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.colorService.remove(+id);
+    return this.colorService.remove(id);
   }
 }

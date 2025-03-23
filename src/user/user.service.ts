@@ -74,7 +74,7 @@ export class UserService {
     return {registeredUser};
   }
 
-  async findAll() {
+  async findAll(userId:string) {
     let data = await this.prisma.user.findMany();
     if(!data.length){
       throw new BadRequestException("Not users found!");
@@ -128,7 +128,7 @@ export class UserService {
   }
 
   async updateImage(id:string, image:string){
-    let user = await this.prisma.user.findUnique({where:{id:Number(id)}});
+    let user = await this.prisma.user.findUnique({where:{id:parseInt(id,10)}});
     if(!user?.image){
       return "File not uploaded"
     }
@@ -142,6 +142,6 @@ export class UserService {
       }
     }
   }
-  }
+}
 
 }

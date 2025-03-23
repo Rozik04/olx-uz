@@ -1,1 +1,7 @@
-export class CreateColorDto {}
+import { IsEmpty, IsNotEmpty, IsString } from "class-validator";
+
+export class CreateColorDto {
+    @IsString()
+    @IsNotEmpty()
+    name:string
+}

@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post,Request, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { FileInterceptor, MulterModule } from '@nestjs/platform-express';
 import { multerFunc } from 'src/multer';
+import { JwtAuthGuard } from 'src/auth-guard/auth.guard';
+import { Roles } from 'src/auth-guard/types';
+import { UserType } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -35,9 +38,12 @@ export class UserController {
     return this.userService.register(data);
   }
 
+
   @Get("all")
-  findAll() {
-    return this.userService.findAll();
+  @UseGuards(JwtAuthGuard)
+  findAll(@Request() req) {
+    let userId = req.user.id
+    return this.userService.findAll(userId);
   }
 
 
