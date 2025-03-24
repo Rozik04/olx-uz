@@ -29,8 +29,11 @@ export class ProductService {
     let comment = await this.prisma.comment.findMany({where:{productID:Number(id)}})
     let stars = comment.reduce((sum, star) => sum + star.star, 0);
     let count = comment.length;
+    let likes = await this.prisma.like.findMany({where:{productID:Number(id)}});
+    let likeCount = likes.length;
+    let comments = await this.prisma.comment.findMany({where: { productID: Number(id) },select: {msg: true, user: {select: {fullname: true, },},},});
     
-    return { product, Rating: stars/count };
+    return { product, Rating: stars/count, Likes: likeCount, Comments:comments };
   }
 
   async update(id: string, data: UpdateProductDto) {

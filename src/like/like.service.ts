@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLikeDto } from './dto/create-like.dto';
-import { UpdateLikeDto } from './dto/update-like.dto';
 
 @Injectable()
 export class LikeService {
-  create(createLikeDto: CreateLikeDto) {
-    return 'This action adds a new like';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async likeProduct(userID: number, productID: number) {
+    const product = await this.prisma.product.findUnique({ where: { id: productID } });
+    if (!product) {
+      throw new Error('Product topilmadi!');
+    }
+
+    const existingLike = await this.prisma.like.findFirst({
+      where: { userID, productID },
+    });
+    if (existingLike) {
+      throw new Error('Bu product allaqachon yoqtirilgan!');
+    }
+
+    return  this.prisma.like.create({
+      data: { userID, productID },
+    });
   }
 
-  findAll() {
-    return `This action returns all like`;
+  async getLikes(productID: number) {
+    return this.prisma.like.count({ where: { productID } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} like`;
-  }
+  async unlikeProduct(userID: number, productID: number) {
+    const like = await this.prisma.like.findFirst({ where: { userID, productID } });
+    if (!like) {
+      throw new Error('Yoqtirish topilmadi!');
+    }
 
-  update(id: number, updateLikeDto: UpdateLikeDto) {
-    return `This action updates a #${id} like`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} like`;
+    return this.prisma.like.delete({ where: { id: like.id } });
   }
 }
