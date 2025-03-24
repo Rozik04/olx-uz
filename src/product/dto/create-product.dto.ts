@@ -24,7 +24,7 @@ export class CreateProductDto {
 
   @IsBoolean()
   @IsNotEmpty()
-  available: boolean;
+  available: number;
 
   @IsNumber()
   @IsNotEmpty()

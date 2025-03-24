@@ -24,7 +24,7 @@ export class UpdateProductDto {
 
   @IsBoolean()
   @IsOptional()
-  available: boolean;
+  available: number;
 
   @IsNumber()
   @IsOptional()

@@ -47,21 +47,20 @@ export class UserService {
     return { message: 'OTP sent successfully' }; 
   }
 
-  async verifyOtp(email:any, otp:any){
-  let nEmail = email.email;
-  let OTP = email.otp;
-  console.log(nEmail);
-  console.log(OTP);
+  async verifyOtp(data:any){
+  let otp = data.otp;
+  let email = data.email;
+  let checkOtp = await this.prisma.temporary.findFirst({where:{otp:otp, email:email}});
+  console.log(checkOtp);
   
-  let checkOtp = await this.prisma.temporary.findMany({where:{otp:OTP}});
-  if(!checkOtp.length){
-    throw new BadRequestException("Wrong OTP");
+  if(!checkOtp){
+    throw new BadRequestException("Something went wrong!");
   }
-  await this.prisma.temporary.delete({where:{id:checkOtp[0].id}});
   
+  await this.prisma.temporary.delete({where:{id:checkOtp.id}}); 
   return "Otp verified successfully"
   }
-
+ 
   async register(data: CreateUserDto) { 
     let checkUSer = await this.prisma.user.findUnique({where:{email:data.email}});
     if(checkUSer){

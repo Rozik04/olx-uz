@@ -10,7 +10,7 @@ export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateProductDto) {
-    return await this.prisma.product.create({ data });
+    return await this.prisma.product.create({data});
   }
 
   async findAll() {
@@ -21,12 +21,16 @@ export class ProductService {
     return { data };
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     let product = await this.prisma.product.findUnique({ where: { id: Number(id) } });
     if (!product) {
       throw new BadRequestException("Product not found!");
     }
-    return { product };
+    let comment = await this.prisma.comment.findMany({where:{productID:Number(id)}})
+    let stars = comment.reduce((sum, star) => sum + star.star, 0);
+    let count = comment.length;
+    
+    return { product, Rating: stars/count };
   }
 
   async update(id: string, data: UpdateProductDto) {
@@ -35,10 +39,8 @@ export class ProductService {
       throw new BadRequestException("Product not found!");
     }
     let updatedProduct = await this.prisma.product.update({
-      where: { id: Number(id) },
-      data,
-    });
-    return { updatedProduct };
+      where: { id: Number(id) },data,});
+      return { updatedProduct };
   }
 
   async remove(id: string) {

@@ -19,8 +19,8 @@ export class UserController {
   }
 
   @Post("verify-otp")
-  verifyOtp(@Body() email:string, otp:string){
-    return this.userService.verifyOtp(email, otp)
+  verifyOtp(@Body() data:any){
+    return this.userService.verifyOtp(data)
   }
 
   @Post("upload-image")

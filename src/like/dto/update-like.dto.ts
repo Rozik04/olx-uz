@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateLikeDto } from './create-like.dto';
+import { IsInt, IsOptional } from 'class-validator';
 
-export class UpdateLikeDto extends PartialType(CreateLikeDto) {}
+export class UpdateLikeDto {
+  @IsOptional()
+  @IsInt()
+  userID?: number;
+
+  @IsOptional()
+  @IsInt()
+  productID?: number;
+}

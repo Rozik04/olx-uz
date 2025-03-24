@@ -65,7 +65,7 @@ model Product {
   userID      Int
   price       Float
   type        ProductType
-  available   Boolean
+  available   Int?
   colorID     Int?
   categoryID  Int?
   status      ProductStatus
@@ -124,6 +124,8 @@ model Order {
   userID         Int
   productID      Int
   countOfProduct Int
+  totalPrice     Decimal?
+  orderTime      DateTime?
   user           User    @relation(fields: [userID], references: [id])
   product        Product @relation(fields: [productID], references: [id])
 }

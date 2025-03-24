@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateCommentDto } from './create-comment.dto';
+import { IsInt, IsString, Min, Max, IsOptional } from 'class-validator';
 
-export class UpdateCommentDto extends PartialType(CreateCommentDto) {}
+export class UpdateCommentDto {
+  @IsString()
+  @IsOptional()
+  msg?: string;
+
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  @IsOptional()
+  star?: number;
+}
